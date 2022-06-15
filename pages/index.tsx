@@ -1,23 +1,23 @@
 import React from 'react'
 import { GetServerSideProps } from 'next'
-import Layout from '../components/Layout'
-import Post, { PostProps } from '../components/Post'
-import prisma from '../lib/prisma'
+import Layout from 'components/Layout'
+import Post, { RecipeProps } from 'components/Post'
+import prisma from 'lib/prisma'
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: { published: true },
+  const recipes = await prisma.recipe.findMany({
+    // where: { published: true },
     include: {
       author: {
         select: { name: true },
       },
     },
   })
-  return { props: { feed } }
+  return { props: { recipes } }
 }
 
 type Props = {
-  feed: PostProps[]
+  recipes: RecipeProps[]
 }
 
 const Blog: React.FC<Props> = (props) => {
