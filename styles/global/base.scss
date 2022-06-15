@@ -1,0 +1,117 @@
+@import 'styles/mixins.scss';
+@import './normalize.scss';
+
+/**
+ * 1. Use proper box-sizing 
+ */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  font-size: 16px;
+}
+
+html,
+body,
+#__next {
+  min-height: 100vh;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: $bg;
+  color: $dark;
+
+  overflow-x: hidden;
+  width: 100vw;
+}
+body,
+p {
+  @include sans;
+  font-size: 1.6rem;
+  font-weight: 480;
+  line-height: 1.4;
+}
+
+p,
+a {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+i,
+em,
+.italic {
+  font-style: italic;
+}
+
+sub,
+sup {
+  font-size: 0.8em;
+}
+
+sub {
+  bottom: -0.2em;
+}
+
+sup {
+  top: -0.2em;
+}
+
+@media screen and (max-width: 1200px),
+  (orientation: landscape) and (max-height: 1200px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 991px),
+  (orientation: landscape) and (max-height: 991px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 720px),
+  (orientation: landscape) and (max-height: 720px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 465px),
+  (orientation: landscape) and (max-height: 465px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 340px),
+  (orientation: landscape) and (max-height: 340px) {
+  html {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 260px),
+  (orientation: landscape) and (max-height: 260px) {
+  html {
+    font-size: 9px;
+  }
+}

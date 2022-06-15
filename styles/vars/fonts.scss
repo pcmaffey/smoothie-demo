@@ -1,0 +1,22 @@
+// system fonts
+$systemSans: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+  Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+$systemSerif: 'Apple Garamond', 'Baskerville', 'Droid Serif', Garamond, Georgia,
+  Cambria, 'Times New Roman', Times, serif;
+
+$systemMonospace: 'Courier New', monospace;
+
+@mixin mono {
+  font-family: $systemMonospace;
+  letter-spacing: -0.04em;
+  font-size: 77%;
+}
+
+@mixin sans {
+  font-family: $systemSans;
+}
+
+@mixin serif {
+  font-family: $systemSerif;
+}
