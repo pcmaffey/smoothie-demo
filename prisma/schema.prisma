@@ -10,13 +10,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Post {
-  id        String  @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  String?
+model Recipe {
+  id          String  @id @default(cuid())
+  name        String
+  ingredients Json
+  published   Boolean @default(false)
+  author      User?   @relation(fields: [authorId], references: [id])
+  authorId    String?
+  tags        Tag[]   @relation(references: [id])
+}
+
+model Tag {
+  id    String  @id @default(cuid())
+  name  String
+  recipes Recipe[] @relation(references: [id])
 }
 
 model Account {
@@ -59,7 +66,7 @@ model User {
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  posts         Post[]
+  recipe        Recipe[]
   accounts      Account[]
   sessions      Session[]
 
