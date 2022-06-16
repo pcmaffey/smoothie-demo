@@ -1,0 +1,20 @@
+.layout {
+  width: 100%;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.header {
+  @extend .row;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+
+  .right {
+    margin-left: auto;
+  }
+  .login {
+    padding: 1rem;
+    white-space: nowrap;
+  }
+}
