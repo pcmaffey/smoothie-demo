@@ -38,7 +38,7 @@ export default function Servings({ size, servings, setServingSize }): Props {
           </div>
         ))}
       </div>
-      servings = {size * servings} total fl oz.
+      smoothies = {size * servings} total fl oz (US).
     </div>
   )
 }

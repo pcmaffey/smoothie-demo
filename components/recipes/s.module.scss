@@ -32,3 +32,11 @@
     }
   }
 }
+
+.ingredient {
+  @extend .row;
+  .color {
+    width: 2rem;
+    height: 2rem;
+  }
+}

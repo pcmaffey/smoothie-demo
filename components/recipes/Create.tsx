@@ -5,6 +5,7 @@ import { useCreateRecipe } from 'components/api'
 import useRecipe, { units } from './useRecipe'
 import Ingredient from './Ingredient'
 import Servings from './Servings'
+import Volume from './Volume'
 type Props = {
   // children: ReactNode
 }
@@ -13,7 +14,7 @@ export default function Create(): Props {
   const [name, setName] = useState('')
   const [ingredientName, setIngredientName] = useState('')
   const [amount, setAmount] = useState(0)
-  const [unit, setUnit] = useState('cups')
+  const [unit, setUnit] = useState('cup')
   const [recipe, dispatch] = useRecipe()
   console.log('recipe :', recipe)
 
@@ -74,12 +75,11 @@ export default function Create(): Props {
 
         <select
           name="unit"
-          id="cars"
           onChange={(e) => setUnit(e.target.value)}
           value={unit}>
           {Object.entries(units).map(([key, value]) => (
             <option value={key} key={key}>
-              {amount == 1 ? value[0] : value[1]}
+              {amount == 1 ? value.s : value.p}
             </option>
           ))}
         </select>
@@ -96,11 +96,17 @@ export default function Create(): Props {
         <button type="button">Clear</button>
       </div>
       <div className={s.ingredients}>
-        {recipe.ingredients.map((ingredient, i) => {
-          return <Ingredient key={i} {...ingredient} />
-        })}
+        <div className={s.list}>
+          {recipe.ingredients.map((ingredient, i) => {
+            return <Ingredient key={i} {...ingredient} />
+          })}
+        </div>
+        <Volume
+          total={recipe.servingSize.volume}
+          current={recipe.volume}
+          ingredients={recipe.ingredients}
+        />
       </div>
-
       <button type="submit">Save Recipe</button>
     </form>
   )

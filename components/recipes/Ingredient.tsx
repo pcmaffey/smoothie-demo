@@ -7,12 +7,23 @@ type Props = {
   name: string
   amount: number
   unit: string
+  color: string
+  volume: number
 }
 
-export default function Ingredient({ name, amount, unit }): Props {
+export default function Ingredient({
+  name,
+  amount,
+  unit,
+  color,
+  volume,
+}): Props {
   return (
     <div className={s.ingredient}>
-      <div>{name}</div>
+      <div className={s.color} style={{ backgroundColor: color }} />
+      <div>
+        {name} {color}
+      </div>
       <div>
         {amount} {unit}
       </div>
