@@ -18,3 +18,17 @@
     white-space: nowrap;
   }
 }
+
+.recipeForm {
+  .name {
+    font-size: 3rem;
+  }
+}
+
+.servings {
+  .sizes {
+    .selected {
+      font-weight: bold;
+    }
+  }
+}

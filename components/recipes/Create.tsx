@@ -1,9 +1,10 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import Header from './Header'
 import s from './s.module.scss'
 import { useCreateRecipe } from 'components/api'
-import useIngredients from './useIngredients'
+import useRecipe, { units } from './useRecipe'
 import Ingredient from './Ingredient'
+import Servings from './Servings'
 type Props = {
   // children: ReactNode
 }
@@ -12,15 +13,24 @@ export default function Create(): Props {
   const [name, setName] = useState('')
   const [ingredientName, setIngredientName] = useState('')
   const [amount, setAmount] = useState(0)
-  const [unit, setUnit] = useState('ounces')
-  console.log('unit :', unit)
-  const [recipe, dispatch] = useIngredients()
+  const [unit, setUnit] = useState('cups')
+  const [recipe, dispatch] = useRecipe()
+  console.log('recipe :', recipe)
+
+  // reset ingredient after adding new
+  useEffect(() => {
+    if (!recipe.response) {
+      setIngredientName('')
+      setAmount(0)
+      // keep unit the same as previous
+    }
+  }, [recipe.response])
 
   const submit = useCreateRecipe()
 
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault()
-    submit({ name, ingredients })
+    submit({ name, recipe })
   }
   /**
    * TODO
@@ -28,26 +38,23 @@ export default function Create(): Props {
    * default: 12 ounces is 1 serving. (edit servings or edit ounces)
    */
   return (
-    <div>
-      <form onSubmit={submitData}>
-        <h1>New Recipe</h1>
-        <input
-          autoFocus
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          type="text"
-          value={name}
-        />
-
-        {recipe.ingredients.map((ingredient, i) => {
-          return (
-            <Ingredient
-              key={i}
-              name={ingredient.name}
-              amount={ingredient.amount}
-            />
-          )
-        })}
+    <form onSubmit={submitData} className={s.recipeForm}>
+      <input
+        autoFocus
+        onChange={(e) => setName(e.target.value)}
+        placeholder="New Recipe"
+        type="text"
+        value={name}
+        className={s.name}
+      />
+      <Servings
+        size={recipe.servingSize.size}
+        servings={recipe.servingSize.servings}
+        setServingSize={(servingSize) =>
+          dispatch({ type: 'servings', servingSize })
+        }
+      />
+      <div className={s.new}>
         <input
           onChange={(e) => setIngredientName(e.target.value)}
           placeholder="New Ingredient"
@@ -56,7 +63,7 @@ export default function Create(): Props {
         />
         <input
           onChange={(e) => {
-            const value = e.target.value
+            const value = Number(e.target.value)
             //TODO check vs max volume
             if (value >= 0) setAmount(value)
           }}
@@ -70,16 +77,31 @@ export default function Create(): Props {
           id="cars"
           onChange={(e) => setUnit(e.target.value)}
           value={unit}>
-          <option value="ounces">fl oz.</option>
-          <option value="cups">cups</option>
-          <option value="mL">mL</option>
-          <option value="liter">liter</option>
-          <option value="pint">pint</option>
+          {Object.entries(units).map(([key, value]) => (
+            <option value={key} key={key}>
+              {amount == 1 ? value[0] : value[1]}
+            </option>
+          ))}
         </select>
-        <button>Add</button>
-        <button>Clear</button>
-        <button type="submit">Save Recipe</button>
-      </form>
-    </div>
+        <button
+          type="button"
+          onClick={() =>
+            dispatch({
+              type: 'add',
+              ingredient: { name: ingredientName, amount, unit },
+            })
+          }>
+          Add
+        </button>
+        <button type="button">Clear</button>
+      </div>
+      <div className={s.ingredients}>
+        {recipe.ingredients.map((ingredient, i) => {
+          return <Ingredient key={i} {...ingredient} />
+        })}
+      </div>
+
+      <button type="submit">Save Recipe</button>
+    </form>
   )
 }
