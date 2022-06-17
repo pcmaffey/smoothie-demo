@@ -19,7 +19,7 @@ export default function Servings({ size, servings, setServingSize }): Props {
       <input
         onChange={(e) => {
           const value = parseInt(e.target.value)
-          if (value >= 0)
+          if (value > 0)
             setServingSize({ servings: value, size, volume: size * value })
         }}
         placeholder="1"

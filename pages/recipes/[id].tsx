@@ -6,10 +6,9 @@ import { useRouter } from 'next/router'
 export default function RecipePage() {
   const { query, push } = useRouter()
   const { data, loading, error } = useRecipe(query.id)
-  console.log('recipe :', data, loading, error)
   return (
     <Layout loading={loading} error={error}>
-      <Recipe {...data} recipe={data?.recipeData} />
+      <Recipe {...data} />
     </Layout>
   )
 }

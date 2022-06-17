@@ -90,8 +90,8 @@ const reducer = (state, action) => {
   }
 
   if (action.type === 'reset') return initialState
-  // TODO check vs total volume
-  // TODO validate vs any rules
+
+  // add new ingredient
   if (action.type === 'add') {
     newState.response = invalidate(action.ingredient)
     if (newState.response) return newState
@@ -104,9 +104,13 @@ const reducer = (state, action) => {
     })
 
     newState.volume += volume
+
+    // remove ingredient
   } else if (action.type === 'remove') {
     newState.ingredients.splice(action.index, 1)
     newState.volume -= calcVolume(action.ingredient)
+
+    // edit ingredient
   } else if (action.type === 'edit') {
     newState.response = invalidate(action.ingredient)
     if (newState.response) return newState
@@ -114,13 +118,29 @@ const reducer = (state, action) => {
     const volume = calcVolume(action.ingredient)
     newState.ingredients[action.index] = { ...action.ingredient, volume }
     newState.volume += volume
+
+    // edit serving size
   } else if (action.type === 'servings') {
+    newState.servingSize = { ...action.servingSize }
+
+    // multiply recipe based on serving size
+  } else if (action.type === 'multiply') {
+    const factor = action.servingSize.volume / newState.servingSize.volume
+    newState.ingredients = newState.ingredients.map((ingredient) => {
+      const newIngredient = {
+        ...ingredient,
+        amount: Math.round(ingredient.amount * factor * 100) / 100,
+        volume: Math.round(ingredient.volume * factor * 100) / 100,
+      }
+      return newIngredient
+    })
+    newState.volume = Math.round(newState.volume * factor * 100) / 100
     newState.servingSize = { ...action.servingSize }
   }
 
   return newState
 }
 
-export default function useRecipe() {
-  return useReducer(reducer, initialState)
+export default function useRecipe(recipeData) {
+  return useReducer(reducer, recipeData || initialState)
 }

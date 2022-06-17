@@ -54,7 +54,7 @@ export function useRecipe(id) {
   const { data } = useSWR(!result ? api.recipe(id) : null, fetcher)
 
   const error = data?.error || (!result && 'Nothing found')
-  if (!error) result = data
+  if (!error && data) result = data
 
   return {
     data: result,

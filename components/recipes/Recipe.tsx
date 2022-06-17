@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react'
 import Header from './Header'
 import s from './s.module.scss'
 import { useCreateRecipe } from 'components/api'
-import useRecipe, { units } from './useRecipe'
+import useRecipe from './useRecipe'
 import Ingredient from './Ingredient'
 import Servings from './Servings'
 import Volume from './Volume'
@@ -10,16 +10,23 @@ type Props = {
   // children: ReactNode
 }
 
-export default function Recipe({ id, name, recipe, published, author }): Props {
+export default function Recipe({
+  id,
+  name,
+  recipeData,
+  published,
+  author,
+}): Props {
+  const [recipe, dispatch] = useRecipe(recipeData)
+  console.log('recipe :', recipe)
   return (
     <div className={s.recipe}>
       <h2>{name}</h2>
       <Servings
         size={recipe.servingSize.size}
         servings={recipe.servingSize.servings}
-        setServingSize={
-          (servingSize) => {}
-          // dispatch({ type: 'servings', servingSize })
+        setServingSize={(servingSize) =>
+          dispatch({ type: 'multiply', servingSize })
         }
       />
 
