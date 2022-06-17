@@ -1,6 +1,7 @@
 import useSWR from 'swr'
+import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
-
+import cuid from 'cuid'
 import Router from 'next/router'
 /**
  * Hooks for calling /api routes
@@ -10,23 +11,54 @@ import Router from 'next/router'
 var localStorage = typeof window !== 'undefined' ? window.localStorage : null
 var fetcher = (...args) => fetch(...args).then((res) => res.json())
 
+// TODO - make async
+// get recipes from local storage
+const getLocal = () => JSON.parse(localStorage?.getItem('recipes') || '[]')
+
 const api = {
   myRecipes: '/api/recipes/mine',
-  create: 'api/recipes/create',
+  create: '/api/recipes/create',
+  recipe: (id) => `/api/recipes/${id}`,
 }
 
 // Fetch users recipes
 export function useMyRecipes() {
   const { session } = useSession()
   // fetch recipes from db if logged in
-  const { data, error } = useSWR(!session ? api.myRecipes : null, fetcher)
-
+  const { data } = useSWR(!session ? api.myRecipes : null, fetcher)
+  const error = data?.error
   // also get recipes stored locally
-  const local = localStorage?.getItem('recipes')
+  const local = getLocal()
   return {
     data,
-    local: local ? JSON.parse(local) : null,
+    local,
     loading: !error && !data,
+    error,
+  }
+}
+
+// Fetch recipe by id
+export function useRecipe(id) {
+  // First, see if is in  localStorage
+  const [recipe, setRecipe] = useState()
+  // useEffect(() => {
+  //   const local = getLocal()
+  //   const r = local.find((r) => r.id === id)
+  //   // if (r) setRecipe(r)
+  // }, [id])
+
+  const local = getLocal()
+  let result = local.find((r) => r.id === id)
+
+  // if not in localStorage, fetch from db
+  const { data } = useSWR(!result ? api.recipe(id) : null, fetcher)
+
+  const error = data?.error || (!result && 'Nothing found')
+  if (!error) result = data
+
+  return {
+    data: result,
+    loading: !error && !result,
     error,
   }
 }
@@ -35,16 +67,24 @@ export function useCreateRecipe() {
   const { session } = useSession()
   const submit = async (data) => {
     try {
-      const body = JSON.stringify(data)
       // Store to db if logged in, otherwise store to local storage
       if (session) {
+        const body = JSON.stringify(data)
         await fetch(api.create, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body,
         })
       } else {
-        localStorage?.setItem('recipes', body)
+        const recipes = getLocal()
+        // generate a cuid
+        data.id = cuid()
+
+        // add to recipes
+        recipes.push(data)
+
+        // save to localstorage
+        localStorage?.setItem('recipes', JSON.stringify(recipes))
       }
       // return to home
       await Router.push('/')
