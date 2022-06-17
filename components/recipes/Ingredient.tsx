@@ -21,9 +21,7 @@ export default function Ingredient({
   return (
     <div className={s.ingredient}>
       <div className={s.color} style={{ backgroundColor: color }} />
-      <div>
-        {name} {color}
-      </div>
+      <div>{name}</div>
       <div>
         {amount} {unit}
       </div>

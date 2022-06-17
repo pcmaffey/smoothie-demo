@@ -13,10 +13,10 @@ generator client {
 model Recipe {
   id          String  @id @default(cuid())
   name        String
-  ingredients Json
+  recipeData  Json @map(name: "recipe_data")
   published   Boolean @default(false)
-  author      User?   @relation(fields: [authorId], references: [id])
-  authorId    String?
+  author        User?   @relation(fields: [authorId], references: [id])
+  authorId      String? @map("user_id")
   tags        Tag[]   @relation(references: [id])
 }
 

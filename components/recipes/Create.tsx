@@ -16,7 +16,7 @@ export default function Create(): Props {
   const [amount, setAmount] = useState(0)
   const [unit, setUnit] = useState('cup')
   const [recipe, dispatch] = useRecipe()
-  console.log('recipe :', recipe)
+  const [message, setMessage] = useState('')
 
   // reset ingredient after adding new
   useEffect(() => {
@@ -31,15 +31,26 @@ export default function Create(): Props {
 
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault()
-    submit({ name, recipe })
+    if (!name) return setMessage('Give your recipe a name')
+    if (!recipe.ingredients.length)
+      return setMessage('Add some ingredients to your recipe')
+    submit({
+      name,
+      recipeData: {
+        ingredients: recipe.ingredients,
+        servingSize: recipe.servingSize,
+        volume: recipe.volume,
+      },
+    })
   }
-  /**
-   * TODO
-   *
-   * default: 12 ounces is 1 serving. (edit servings or edit ounces)
-   */
+
   return (
     <form onSubmit={submitData} className={s.recipeForm}>
+      {message && (
+        <div className={s.message} onClick={() => setMessage('')}>
+          {message}
+        </div>
+      )}
       <input
         autoFocus
         onChange={(e) => setName(e.target.value)}
@@ -65,7 +76,6 @@ export default function Create(): Props {
         <input
           onChange={(e) => {
             const value = Number(e.target.value)
-            //TODO check vs max volume
             if (value >= 0) setAmount(value)
           }}
           placeholder="Amount"
