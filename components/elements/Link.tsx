@@ -6,18 +6,18 @@ import cx from 'classnames'
 export default function Link({
   children,
   className,
-  activeClassName,
+  currentClassName,
   Component = 'a',
   shallow,
   ...props
 }) {
   const router = useRouter()
-  const isActive = router.pathname === props.href
+  const isCurrent = router.pathname === props.href
 
   const c = cx(
     s.a,
-    isActive && s.active,
-    isActive && activeClassName,
+    isCurrent && s.current,
+    isCurrent && currentClassName,
     className
   )
   return (
