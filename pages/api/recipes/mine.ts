@@ -3,10 +3,9 @@ import prisma from 'lib/prisma'
 
 export default async function handle(req, res) {
   const session = await getSession({ req })
-  console.log('session :', session)
   if (!session) return res.status(404).json({ error: 'Nothing found' })
   const result = await prisma.recipe.findMany({
-    // where: { published: true },
+    where: { author: { email: session.user.email } },
     include: {
       author: {
         select: { name: true },

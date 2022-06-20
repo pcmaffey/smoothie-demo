@@ -5,13 +5,14 @@ import prisma from 'lib/prisma'
 // Required fields in body: name, ingredients
 // Optional fields: tags
 export default async function handle(req, res) {
-  const { name, ingredients } = req.body
+  const { name, recipeData, published } = req.body
 
   const session = await getSession({ req })
   const result = await prisma.recipe.create({
     data: {
       name,
-      ingredients,
+      recipeData,
+      published: !!published,
       //   tags,
       author: { connect: { email: session?.user?.email } },
     },
