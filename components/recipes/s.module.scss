@@ -73,6 +73,16 @@
       max-width: 10rem;
     }
   }
+  .details {
+    @extend .row;
+    justify-content: flex-start;
+    :not(:last-child) {
+      &:after {
+        content: ' • ';
+        margin: 0 0.5rem;
+      }
+    }
+  }
 }
 
 .ingredients {
@@ -99,6 +109,14 @@
 
   @media screen and (max-width: 900px) {
     text-align: center;
+  }
+}
+.publish {
+  @extend .row;
+  justify-content: flex-start;
+  margin: 1rem 0;
+  input {
+    width: 2rem;
   }
 }
 .message {

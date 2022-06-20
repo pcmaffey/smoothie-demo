@@ -18,6 +18,7 @@ const api = {
   myRecipes: '/api/recipes/mine',
   create: '/api/recipes/create',
   recipe: (id) => `/api/recipes/${id}`,
+  publish: (id) => `/api/publish/${id}`,
 }
 
 // Fetch users recipes
@@ -43,7 +44,7 @@ export function useRecipe(id) {
   let result = local.find((r) => r.id === id)
 
   // if not in localStorage, fetch from db
-  const { data } = useSWR(!result ? api.recipe(id) : null, fetcher)
+  const { data } = useSWR(!result && id ? api.recipe(id) : null, fetcher)
 
   const error = data?.error
   if (!error && data) result = data
@@ -80,6 +81,25 @@ export function useCreateRecipe() {
         // save to localstorage
         localStorage?.setItem('recipes', JSON.stringify(recipes))
       }
+      // return to home
+      await Router.push('/')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  return submit
+}
+
+export function usePublishRecipe() {
+  const { data: session } = useSession()
+  const submit = async (id) => {
+    try {
+      if (!session) throw Error('Not authorized')
+      await fetch(api.publish(id), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
       // return to home
       await Router.push('/')
     } catch (error) {

@@ -8,10 +8,9 @@ type Props = {
 }
 
 function Recipe({ name, id, published, createdAt }) {
-  console.log('createdAt :', createdAt)
   return (
     <Link className={s.recipeLink} href={`/recipes/${id}`}>
-      <b>{name}</b> <span>{createdAt.slice(0, 10)}</span>
+      <b>{name}</b> <span>{createdAt?.slice(0, 10)}</span>
       {published && <i>published</i>}
     </Link>
   )

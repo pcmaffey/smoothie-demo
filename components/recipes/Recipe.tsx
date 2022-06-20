@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import Header from './Header'
 import s from './s.module.scss'
-import { useCreateRecipe } from 'components/api'
+import { usePublishRecipe } from 'components/api'
 import useRecipe from './useRecipe'
 import Ingredient from './Ingredient'
 import Servings from './Servings'
 import Volume from './Volume'
+import { useSession } from 'next-auth/react'
+import Link from 'components/elements/Link'
 type Props = {
   // children: ReactNode
 }
@@ -16,16 +18,28 @@ export default function Recipe({
   recipeData,
   published,
   author,
+  isAuthor,
 }): Props {
+  const { data: session } = useSession()
   const [recipe, dispatch] = useRecipe(recipeData)
+  const publish = usePublishRecipe()
   return (
     <div className={s.recipe}>
       <h2 className={s.name}>{name}</h2>
-      {author && (
-        <p>
-          <i>by {author.name}</i>
-        </p>
-      )}
+      <div className={s.details}>
+        {author && (
+          <p>
+            <i>by {author.name}</i>
+          </p>
+        )}
+        {published ? (
+          <p>
+            <i>published</i>
+          </p>
+        ) : (
+          isAuthor && <Link onClick={() => publish(id)}>Publish</Link>
+        )}
+      </div>
       <Servings
         size={recipe.servingSize.size}
         servings={recipe.servingSize.servings}

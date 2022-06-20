@@ -20,11 +20,17 @@ export default function Link({
     isCurrent && currentClassName,
     className
   )
+  if (props.href)
+    return (
+      <NextLink href={props.href} as={props.as} shallow={shallow} passHref>
+        <Component className={c} {...props}>
+          {children}
+        </Component>
+      </NextLink>
+    )
   return (
-    <NextLink href={props.href} as={props.as} shallow={shallow} passHref>
-      <Component className={c} {...props}>
-        {children}
-      </Component>
-    </NextLink>
+    <Component className={c} {...props}>
+      {children}
+    </Component>
   )
 }

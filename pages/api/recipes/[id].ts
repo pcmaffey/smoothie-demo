@@ -10,17 +10,22 @@ export default async function handle(req, res) {
     where: { id },
     include: {
       author: {
-        select: { name: true },
+        select: { name: true, email: true },
       },
     },
   })
 
-  console.log(' RESULT API:', result)
   if (!result) return reject()
 
   // if not logged in, recipe must be published
   const session = await getSession({ req })
   if (!session && !result.published) return reject()
+  // is current session the author?
+  else if (session && session.user.email === result.author.email)
+    result.isAuthor = true
 
+  // remove email from result for security
+  result.author.email = undefined
+  console.log('result :', result)
   res.json(result)
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react'
 import Header from './Header'
 import s from './s.module.scss'
 import { useCreateRecipe } from 'components/api'
+import { useSession } from 'next-auth/react'
 import useRecipe, { units } from './useRecipe'
 import Ingredient from './Ingredient'
 import Servings from './Servings'
@@ -11,12 +12,14 @@ type Props = {
 }
 
 export default function Create(): Props {
+  const { data: session } = useSession()
   const [name, setName] = useState('')
   const [ingredientName, setIngredientName] = useState('')
   const [amount, setAmount] = useState(0)
   const [unit, setUnit] = useState('cup')
   const [recipe, dispatch] = useRecipe()
   const [message, setMessage] = useState('')
+  const [publish, setPublish] = useState(false)
 
   // reset ingredient after adding new
   useEffect(() => {
@@ -39,6 +42,7 @@ export default function Create(): Props {
         servingSize: recipe.servingSize,
         volume: recipe.volume,
       },
+      published: session && publish,
     })
   }
 
@@ -118,7 +122,19 @@ export default function Create(): Props {
             />
           </div>
           <div className={s.save}>
+            {session && (
+              <div className={s.publish}>
+                <input
+                  type="checkbox"
+                  id="publish"
+                  value={publish}
+                  onChange={() => setPublish(!publish)}
+                />{' '}
+                <label htmlFor="publish">Publish</label>
+              </div>
+            )}
             <button type="submit">Save Recipe</button>
+
             {message && (
               <div className={s.message} onClick={() => setMessage('')}>
                 [x] {message}

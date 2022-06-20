@@ -1,11 +1,11 @@
-import prisma from "../../../lib/prisma";
+import prisma from 'lib/prisma'
 
 // PUT /api/publish/:id
 export default async function handle(req, res) {
-  const postId = req.query.id;
-  const post = await prisma.post.update({
-    where: { id: postId },
+  const id = req.query.id
+  const recipe = await prisma.recipe.update({
+    where: { id },
     data: { published: true },
-  });
-  res.json(post);
+  })
+  res.json(recipe)
 }
