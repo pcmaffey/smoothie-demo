@@ -17,6 +17,7 @@ const getLocal = () => JSON.parse(localStorage?.getItem('recipes') || '[]')
 const api = {
   myRecipes: '/api/recipes/mine',
   create: '/api/recipes/create',
+  recipes: '/api/recipes',
   recipe: (id) => `/api/recipes/${id}`,
   publish: (id) => `/api/publish/${id}`,
   delete: (id) => `/api/delete/${id}`,
@@ -60,6 +61,20 @@ export function useRecipe(id) {
   }
 }
 
+// Fetch all published recipes
+// TODO - search + pagination
+export function useRecipes() {
+  // fetch recipes from db if logged in
+  const { data } = useSWR(api.recipes, fetcher)
+  const error = data?.error
+  return {
+    data,
+    error,
+    loading: !error && !data,
+  }
+}
+
+// Create a recipe to local storage or if logged in, to db
 export function useCreateRecipe() {
   const { data: session } = useSession()
   const submit = async (data) => {
@@ -125,7 +140,6 @@ export function useDeleteRecipe(isLocal) {
 
         // save back to localstorage
         localStorage?.setItem('recipes', JSON.stringify(local))
-        console.log('local :', local)
       } else {
         // or else remove from db
         await fetch(api.publish(id), {

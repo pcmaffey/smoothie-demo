@@ -6,6 +6,7 @@ export default function Nav() {
     <nav className={s.nav}>
       <Link href="/">My recipes</Link>
       <Link href="/create">Create new recipe</Link>
+      <Link href="/recipes">Find a recipe</Link>
     </nav>
   )
 }
