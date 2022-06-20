@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import s from './s.module.scss'
-
+import { ServingSize } from 'components/types'
 type Props = {
-  children: ReactNode
+  size: number
+  servings: number
+  setServingSize: (arg: ServingSize) => void
+  className?: string
 }
 
 const sizes = {
@@ -17,7 +19,7 @@ export default function Servings({
   servings,
   setServingSize,
   className,
-}): Props {
+}: Props) {
   return (
     <div className={cx(s.servings, className)}>
       <label>Make this recipe for:</label>
@@ -36,9 +38,13 @@ export default function Servings({
           <div
             key={key}
             onClick={() =>
-              setServingSize({ servings, size: key, volume: key * servings })
+              setServingSize({
+                servings,
+                size: parseInt(key),
+                volume: parseInt(key) * servings,
+              })
             }
-            className={cx(key == size && s.selected)}>
+            className={cx(parseInt(key) === size && s.selected)}>
             {value}
           </div>
         ))}

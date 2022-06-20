@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react'
-import Header from './Header'
 import s from './s.module.scss'
 import Link from 'components/elements/Link'
+
+import { Recipe, LocalRecipe } from 'components/types'
+
 type Props = {
-  // children: ReactNode
+  data?: Recipe[]
+  local?: LocalRecipe[]
+  home?: boolean
 }
 
-function Recipe({ name, id, published, author, createdAt }) {
+function RecipeLink({ name, id, published, author, createdAt }: Recipe) {
   return (
     <Link className={s.recipeLink} href={`/recipes/${id}`}>
       <b>{name}</b>
@@ -18,15 +21,14 @@ function Recipe({ name, id, published, author, createdAt }) {
   )
 }
 
-export default function Recipes({ data, local, home }): Props {
-  console.log('data :', data)
+export default function Recipes({ data, local, home }: Props) {
   return (
     <div className={s.recipes}>
       {local?.map((recipe) => (
-        <Recipe key={recipe.id} {...recipe} />
+        <RecipeLink key={recipe.id} {...recipe} />
       ))}
       {data?.map((recipe) => (
-        <Recipe
+        <RecipeLink
           key={recipe.id}
           {...recipe}
           author={!home && recipe.author}

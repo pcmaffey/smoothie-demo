@@ -1,6 +1,4 @@
 import React, { ReactNode } from 'react'
-import Header from './Header'
-import Nav from './Nav'
 import s from './s.module.scss'
 
 import { units } from './useRecipe'
@@ -20,7 +18,7 @@ export default function Ingredient({
   color,
   volume,
   remove,
-}): Props {
+}: Props) {
   return (
     <div className={s.ingredient}>
       <div className={s.color} style={{ backgroundColor: color }} />

@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react'
+import { RecipeData } from 'components/types'
 
 // units as with singular / plural forms + conversion to fl oz
 export const units = {
@@ -143,6 +144,7 @@ const reducer = (state, action) => {
   return newState
 }
 
-export default function useRecipe(recipeData) {
+export default function useRecipe(recipeData?: RecipeData): any {
+  // @ts-ignore
   return useReducer(reducer, recipeData || initialState)
 }

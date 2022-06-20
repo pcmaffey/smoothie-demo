@@ -9,7 +9,7 @@ import Router from 'next/router'
 
 // escape localStorage so only called on client
 var localStorage = typeof window !== 'undefined' ? window.localStorage : null
-var fetcher = (...args) => fetch(...args).then((res) => res.json())
+var fetcher = (args) => fetch(args).then((res) => res.json())
 
 // get recipes from local storage
 const getLocal = () => JSON.parse(localStorage?.getItem('recipes') || '[]')
@@ -36,6 +36,7 @@ export function useMyRecipes() {
     data,
     local,
     error,
+    loading: false,
   }
 }
 

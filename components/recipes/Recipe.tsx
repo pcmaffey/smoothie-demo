@@ -1,5 +1,3 @@
-import React, { useState, useEffect, useReducer } from 'react'
-import Header from './Header'
 import s from './s.module.scss'
 import { usePublishRecipe, useDeleteRecipe } from 'components/api'
 import useRecipe from './useRecipe'
@@ -8,8 +6,11 @@ import Servings from './Servings'
 import Volume from './Volume'
 import { useSession } from 'next-auth/react'
 import Link from 'components/elements/Link'
-type Props = {
-  // children: ReactNode
+import { Recipe as RecipeType } from 'components/types'
+
+type Props = RecipeType & {
+  isAuthor?: boolean
+  isLocal?: boolean
 }
 
 export default function Recipe({
@@ -20,7 +21,7 @@ export default function Recipe({
   author,
   isAuthor,
   isLocal,
-}): Props {
+}: Props) {
   const { data: session } = useSession()
   const [recipe, dispatch] = useRecipe(recipeData)
   const publishRecipe = usePublishRecipe()

@@ -20,12 +20,13 @@ export default async function handle(req, res) {
   // if not logged in, recipe must be published
   const session = await getSession({ req })
   if (!session && !result.published) return reject()
+
   // is current session the author?
-  else if (session && session.user.email === result.author.email)
-    result.isAuthor = true
+  let isAuthor
+  if (session && session.user.email === result.author.email) isAuthor = true
 
   // remove email from result for security
   result.author.email = undefined
 
-  res.json(result)
+  res.json({ ...result, isAuthor })
 }

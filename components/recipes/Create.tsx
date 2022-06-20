@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import Header from './Header'
 import s from './s.module.scss'
 import { useCreateRecipe } from 'components/api'
 import { useSession } from 'next-auth/react'
@@ -7,11 +6,8 @@ import useRecipe, { units } from './useRecipe'
 import Ingredient from './Ingredient'
 import Servings from './Servings'
 import Volume from './Volume'
-type Props = {
-  // children: ReactNode
-}
 
-export default function Create(): Props {
+export default function Create() {
   const { data: session } = useSession()
   const [name, setName] = useState('')
   const [ingredientName, setIngredientName] = useState('')
@@ -127,7 +123,7 @@ export default function Create(): Props {
                 <input
                   type="checkbox"
                   id="publish"
-                  value={publish}
+                  checked={publish}
                   onChange={() => setPublish(!publish)}
                 />{' '}
                 <label htmlFor="publish">Publish</label>

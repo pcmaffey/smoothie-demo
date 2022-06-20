@@ -1,12 +1,14 @@
 import React from 'react'
-
+import { Ingredient } from 'components/types'
 import s from './s.module.scss'
 
 type Props = {
-  //   children: ReactNode
+  total: number
+  current: number
+  ingredients: Ingredient[]
 }
 
-export default function Volume({ total, current, ingredients }): Props {
+export default function Volume({ total, current, ingredients }: Props) {
   const diff = total - current
   let offset = 0
   return (
