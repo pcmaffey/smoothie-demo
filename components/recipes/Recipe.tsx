@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import Header from './Header'
 import s from './s.module.scss'
-import { usePublishRecipe } from 'components/api'
+import { usePublishRecipe, useDeleteRecipe } from 'components/api'
 import useRecipe from './useRecipe'
 import Ingredient from './Ingredient'
 import Servings from './Servings'
@@ -19,10 +19,12 @@ export default function Recipe({
   published,
   author,
   isAuthor,
+  isLocal,
 }): Props {
   const { data: session } = useSession()
   const [recipe, dispatch] = useRecipe(recipeData)
-  const publish = usePublishRecipe()
+  const publishRecipe = usePublishRecipe()
+  const deleteRecipe = useDeleteRecipe(isLocal)
   return (
     <div className={s.recipe}>
       <h2 className={s.name}>{name}</h2>
@@ -37,7 +39,10 @@ export default function Recipe({
             <i>published</i>
           </p>
         ) : (
-          isAuthor && <Link onClick={() => publish(id)}>Publish</Link>
+          isAuthor && <Link onClick={() => publishRecipe(id)}>Publish</Link>
+        )}
+        {(isAuthor || isLocal) && (
+          <Link onClick={() => deleteRecipe(id)}>Delete</Link>
         )}
       </div>
       <Servings

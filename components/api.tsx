@@ -19,6 +19,7 @@ const api = {
   create: '/api/recipes/create',
   recipe: (id) => `/api/recipes/${id}`,
   publish: (id) => `/api/publish/${id}`,
+  delete: (id) => `/api/delete/${id}`,
 }
 
 // Fetch users recipes
@@ -43,6 +44,8 @@ export function useRecipe(id) {
   const local = getLocal()
   let result = local.find((r) => r.id === id)
 
+  const isLocal = !!result
+
   // if not in localStorage, fetch from db
   const { data } = useSWR(!result && id ? api.recipe(id) : null, fetcher)
 
@@ -53,6 +56,7 @@ export function useRecipe(id) {
     data: result,
     loading: !error && !result,
     error,
+    isLocal,
   }
 }
 
@@ -97,8 +101,37 @@ export function usePublishRecipe() {
       if (!session) throw Error('Not authorized')
       await fetch(api.publish(id), {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
       })
+
+      // return to home
+      await Router.push('/')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  return submit
+}
+
+export function useDeleteRecipe(isLocal) {
+  const { data: session } = useSession()
+  const submit = async (id) => {
+    try {
+      // remove from local storage
+      if (isLocal) {
+        const local = getLocal()
+
+        const index = local.findIndex((r) => r.id === id)
+        if (index > 0) local.splice(index, 1)
+
+        // save back to localstorage
+        localStorage?.setItem('recipes', JSON.stringify(local))
+        console.log('local :', local)
+      } else {
+        // or else remove from db
+        await fetch(api.publish(id), {
+          method: 'DELETE',
+        })
+      }
 
       // return to home
       await Router.push('/')

@@ -26,6 +26,6 @@ export default async function handle(req, res) {
 
   // remove email from result for security
   result.author.email = undefined
-  console.log('result :', result)
+
   res.json(result)
 }

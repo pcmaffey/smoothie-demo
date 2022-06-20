@@ -5,10 +5,10 @@ import { useRecipe } from 'components/api'
 import { useRouter } from 'next/router'
 export default function RecipePage() {
   const { query, push } = useRouter()
-  const { data, loading, error } = useRecipe(query.id)
+  const { data, loading, error, isLocal } = useRecipe(query.id)
   return (
     <Layout loading={loading} error={error}>
-      <Recipe {...data} />
+      <Recipe {...data} isLocal={isLocal} />
     </Layout>
   )
 }
