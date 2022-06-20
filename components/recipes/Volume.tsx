@@ -11,10 +11,7 @@ export default function Volume({ total, current, ingredients }): Props {
   let offset = 0
   return (
     <div className={s.volume}>
-      {total} total, {current} current
-      {diff > 0 && <div>{diff} remaining</div>}
-      {diff < 0 && <div>You'll have {Math.abs(diff)} fl oz. extra</div>}
-      <svg version="1.1" x="0px" y="0px" viewBox="0 0 1000 1000" width="400px">
+      <svg version="1.1" x="0px" y="0px" viewBox="0 0 1000 1000" width="350px">
         <defs>
           <linearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
             {ingredients.map(({ color, volume }, i) => {
@@ -24,11 +21,17 @@ export default function Volume({ total, current, ingredients }): Props {
               return (
                 <React.Fragment key={i}>
                   <stop
-                    offset={`${offset - percent + percent * 0.2}%`} // add a little fuzz to blend the colors
+                    offset={`${
+                      offset -
+                      percent +
+                      (ingredients.length > 1 ? percent * 0.2 : 0)
+                    }%`} // add a little fuzz to blend the colors
                     stopColor={color}
                   />
                   <stop
-                    offset={`${offset - percent * 0.2}%`}
+                    offset={`${
+                      offset - (i < ingredients.length - 1 ? percent * 0.2 : 0)
+                    }%`}
                     stopColor={color}
                   />
                 </React.Fragment>
@@ -44,7 +47,9 @@ export default function Volume({ total, current, ingredients }): Props {
         </defs>
 
         <g>
-          <g transform="translate(0.000000,511.000000) scale(0.100000,-0.100000)">
+          <g
+            transform="translate(0.000000,511.000000) scale(0.100000,-0.100000)"
+            fill="#a89f9f">
             <path d="M4182.2,5004.3c-1019-65.4-1617-244.2-1609.3-482.6c0-28.8,136.5-1088.3,303.8-2351.5c205.7-1574.7,313.4-2328.4,338.4-2395.7c51.9-142.3,165.3-263.4,319.2-338.4l128.8-63.4h1076.7h1076.7l107.7,50c246.1,115.4,346.1,267.3,398,596.1l32.7,219.2l413.4,176.9c726.8,309.5,719.1,305.7,834.5,430.7c63.4,67.3,123,155.7,150,223c44.2,111.5,44.2,115.4,44.2,957.5c0,840.2,0,846-44.2,955.6c-55.8,136.5-209.6,309.6-328.8,369.2c-48.1,25-196.1,90.4-328.8,146.1c-132.7,55.8-251.9,113.4-267.3,126.9c-25,23.1-21.1,78.8,25,426.8c28.8,219.2,53.8,428.8,53.8,463.4c5.8,213.4-394.2,367.2-1178.6,453.8C5462.7,4996.6,4447.5,5021.6,4182.2,5004.3z M6512.5,3916c26.9-34.6-496.1-3983.9-536.4-4062.7c-36.5-69.2-80.8-109.6-163.4-151.9c-53.8-26.9-178.8-30.8-1072.9-30.8s-1019,3.8-1072.9,30.8c-82.7,42.3-126.9,82.7-161.5,151.9C3465-69.8,2942.1,3881.4,2967,3916C2994,3950.7,6485.6,3950.7,6512.5,3916z M7041.3,3197c303.8-128.8,348-159.6,409.5-284.6l48.1-96.1v-788.3c0-874.8-1.9-878.7-128.8-999.8c-57.7-53.8-942.1-448-961.3-426.9c-11.5,9.6,336.5,2661,351.8,2686C6776,3312.3,6766.3,3314.2,7041.3,3197z" />
             <path d="M3268.9,2660.5c0-25,76.9-636.4,173-1359.4c94.2-722.9,173-1324.8,173-1338.2c0-15.4,25-51.9,55.8-82.7l55.8-55.8h1009.4c982.5,0,1009.4,0,1057.5,38.5c26.9,21.2,53.8,53.8,59.6,73c15.4,46.2,357.6,2653.4,357.6,2720.7v51.9H4739.8H3268.9V2660.5z" />
             <path
@@ -56,6 +61,15 @@ export default function Volume({ total, current, ingredients }): Props {
           </g>
         </g>
       </svg>
+      {diff < 0 ? (
+        <p>You'll have {Math.abs(Math.round(diff * 100) / 100)} fl oz. extra</p>
+      ) : (
+        <p>
+          {current} of {total} fl oz.
+        </p>
+      )}
+
+      {diff < 0 && <i></i>}
     </div>
   )
 }

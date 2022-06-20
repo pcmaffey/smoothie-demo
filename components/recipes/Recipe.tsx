@@ -18,16 +18,21 @@ export default function Recipe({
   author,
 }): Props {
   const [recipe, dispatch] = useRecipe(recipeData)
-  console.log('recipe :', recipe)
   return (
     <div className={s.recipe}>
-      <h2>{name}</h2>
+      <h2 className={s.name}>{name}</h2>
+      {author && (
+        <p>
+          <i>by {author.name}</i>
+        </p>
+      )}
       <Servings
         size={recipe.servingSize.size}
         servings={recipe.servingSize.servings}
         setServingSize={(servingSize) =>
           dispatch({ type: 'multiply', servingSize })
         }
+        className={s.bg}
       />
 
       <div className={s.ingredients}>

@@ -7,10 +7,12 @@ type Props = {
   // children: ReactNode
 }
 
-function Recipe({ name, id }) {
+function Recipe({ name, id, published, createdAt }) {
+  console.log('createdAt :', createdAt)
   return (
     <Link className={s.recipeLink} href={`/recipes/${id}`}>
-      {name}
+      <b>{name}</b> <span>{createdAt.slice(0, 10)}</span>
+      {published && <i>published</i>}
     </Link>
   )
 }
@@ -18,13 +20,21 @@ function Recipe({ name, id }) {
 export default function MyRecipes(): Props {
   const { data, local, loading, error } = useMyRecipes()
   if (loading) return <div>Loading...</div>
-  if (!data?.length && !local?.length) return <div />
 
   return (
-    <div>
+    <div className={s.recipes}>
       {local.map((recipe) => (
         <Recipe key={recipe.id} {...recipe} />
       ))}
+      {data?.map((recipe) => (
+        <Recipe key={recipe.id} {...recipe} />
+      ))}
+      {!local.length && !data?.length && (
+        <p>
+          Ready to create your first recipe?{' '}
+          <Link href="/create">Let's get started</Link>
+        </p>
+      )}
     </div>
   )
 }

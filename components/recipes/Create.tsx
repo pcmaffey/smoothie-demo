@@ -20,12 +20,10 @@ export default function Create(): Props {
 
   // reset ingredient after adding new
   useEffect(() => {
-    if (!recipe.response) {
-      setIngredientName('')
-      setAmount(0)
-      // keep unit the same as previous
-    }
-  }, [recipe.response])
+    setIngredientName('')
+    setAmount(0)
+    // keep unit the same as previous
+  }, [recipe.ingredients.length])
 
   const submit = useCreateRecipe()
 
@@ -45,16 +43,11 @@ export default function Create(): Props {
   }
 
   return (
-    <form onSubmit={submitData} className={s.recipeForm}>
-      {message && (
-        <div className={s.message} onClick={() => setMessage('')}>
-          {message}
-        </div>
-      )}
+    <form onSubmit={submitData} className={s.recipe}>
       <input
         autoFocus
         onChange={(e) => setName(e.target.value)}
-        placeholder="New Recipe"
+        placeholder="Name your recipe"
         type="text"
         value={name}
         className={s.name}
@@ -101,23 +94,39 @@ export default function Create(): Props {
               ingredient: { name: ingredientName, amount, unit },
             })
           }>
-          Add
+          + Add
         </button>
-        <button type="button">Clear</button>
       </div>
-      <div className={s.ingredients}>
-        <div className={s.list}>
-          {recipe.ingredients.map((ingredient, i) => {
-            return <Ingredient key={i} {...ingredient} />
-          })}
-        </div>
-        <Volume
-          total={recipe.servingSize.volume}
-          current={recipe.volume}
-          ingredients={recipe.ingredients}
-        />
-      </div>
-      <button type="submit">Save Recipe</button>
+      {recipe.ingredients.length ? (
+        <>
+          <div className={s.ingredients}>
+            <div className={s.list}>
+              {recipe.ingredients.map((ingredient, i) => {
+                return (
+                  <Ingredient
+                    key={i}
+                    {...ingredient}
+                    remove={() => dispatch({ type: 'remove', index: i })}
+                  />
+                )
+              })}
+            </div>
+            <Volume
+              total={recipe.servingSize.volume}
+              current={recipe.volume}
+              ingredients={recipe.ingredients}
+            />
+          </div>
+          <div className={s.save}>
+            <button type="submit">Save Recipe</button>
+            {message && (
+              <div className={s.message} onClick={() => setMessage('')}>
+                [x] {message}
+              </div>
+            )}
+          </div>
+        </>
+      ) : null}
     </form>
   )
 }

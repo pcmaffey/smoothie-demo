@@ -12,10 +12,15 @@ const sizes = {
   16: 'large (16 fl oz.)',
 }
 
-export default function Servings({ size, servings, setServingSize }): Props {
+export default function Servings({
+  size,
+  servings,
+  setServingSize,
+  className,
+}): Props {
   return (
-    <div className={s.servings}>
-      <label>Make this recipe for</label>
+    <div className={cx(s.servings, className)}>
+      <label>Make this recipe for:</label>
       <input
         onChange={(e) => {
           const value = parseInt(e.target.value)
@@ -38,7 +43,11 @@ export default function Servings({ size, servings, setServingSize }): Props {
           </div>
         ))}
       </div>
-      smoothies = {size * servings} total fl oz (US).
+      <p>
+        <i>
+          serving{servings > 1 ? 's' : ''} - {size * servings} total fl oz (US).
+        </i>
+      </p>
     </div>
   )
 }
