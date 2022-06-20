@@ -107,8 +107,10 @@ const reducer = (state, action) => {
 
     // remove ingredient
   } else if (action.type === 'remove') {
+    const volume = calcVolume(newState.ingredients[action.index])
+    newState.volume -= volume
+
     newState.ingredients.splice(action.index, 1)
-    newState.volume -= calcVolume(action.ingredient)
 
     // edit ingredient
   } else if (action.type === 'edit') {

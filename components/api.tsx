@@ -11,7 +11,6 @@ import Router from 'next/router'
 var localStorage = typeof window !== 'undefined' ? window.localStorage : null
 var fetcher = (...args) => fetch(...args).then((res) => res.json())
 
-// TODO - make async
 // get recipes from local storage
 const getLocal = () => JSON.parse(localStorage?.getItem('recipes') || '[]')
 
@@ -23,16 +22,16 @@ const api = {
 
 // Fetch users recipes
 export function useMyRecipes() {
-  const { session } = useSession()
+  const { data: session } = useSession()
   // fetch recipes from db if logged in
-  const { data } = useSWR(!session ? api.myRecipes : null, fetcher)
+  const { data } = useSWR(session ? api.myRecipes : null, fetcher)
+
   const error = data?.error
   // also get recipes stored locally
   const local = getLocal()
   return {
     data,
     local,
-    loading: !error && !data,
     error,
   }
 }
@@ -40,20 +39,13 @@ export function useMyRecipes() {
 // Fetch recipe by id
 export function useRecipe(id) {
   // First, see if is in  localStorage
-  const [recipe, setRecipe] = useState()
-  // useEffect(() => {
-  //   const local = getLocal()
-  //   const r = local.find((r) => r.id === id)
-  //   // if (r) setRecipe(r)
-  // }, [id])
-
   const local = getLocal()
   let result = local.find((r) => r.id === id)
 
   // if not in localStorage, fetch from db
   const { data } = useSWR(!result ? api.recipe(id) : null, fetcher)
 
-  const error = data?.error || (!result && 'Nothing found')
+  const error = data?.error || (!result && !data && 'Nothing found')
   if (!error && data) result = data
 
   return {
@@ -64,7 +56,7 @@ export function useRecipe(id) {
 }
 
 export function useCreateRecipe() {
-  const { session } = useSession()
+  const { data: session } = useSession()
   const submit = async (data) => {
     try {
       // Store to db if logged in, otherwise store to local storage
@@ -79,6 +71,8 @@ export function useCreateRecipe() {
         const recipes = getLocal()
         // generate a cuid
         data.id = cuid()
+        // add timestamp
+        data.createdAt = new Date()
 
         // add to recipes
         recipes.push(data)

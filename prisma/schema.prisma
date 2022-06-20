@@ -18,6 +18,7 @@ model Recipe {
   author        User?   @relation(fields: [authorId], references: [id])
   authorId      String? @map("user_id")
   tags        Tag[]   @relation(references: [id])
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
 }
 
 model Tag {
