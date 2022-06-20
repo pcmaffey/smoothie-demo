@@ -45,7 +45,7 @@ export function useRecipe(id) {
   // if not in localStorage, fetch from db
   const { data } = useSWR(!result ? api.recipe(id) : null, fetcher)
 
-  const error = data?.error || (!result && !data && 'Nothing found')
+  const error = data?.error
   if (!error && data) result = data
 
   return {
