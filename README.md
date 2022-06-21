@@ -25,3 +25,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 See `.env-example` for the necessary environment variables in a `.env` file to connect to a postgres server for development, or use Github's OAuth service.
 
 The project will still run locally without these vars, by saving all recipes to localStorage.
+
+When deploying your site set the NEXTAUTH_URL environment variable to the canonical URL of the website.
+
+`NEXTAUTH_URL=https://example.com`
