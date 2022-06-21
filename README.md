@@ -1,12 +1,12 @@
 # What is Smoothie Operator?
 
-Smoothie Operator is a demo project for creating and sharing smoothie recipes. Here's the demo url: [https://smoothie-demo.herokuapp.com/]
+Smoothie Operator is a demo project for creating and sharing smoothie recipes. Here's the demo url: (https://smoothie-demo.herokuapp.com/)
 
 ## Stack
 
-This project uses (Next.js)[https://github.com/vercel/next.js] (with NextAuth.js)[https://github.com/nextauthjs/next-auth] for authentication and (Prisma)[https://github.com/prisma/prisma] for its ORM, connecting to a postgres database hosted on Heroku.
+This project uses [Next.js](https://github.com/vercel/next.js) [with NextAuth.js](https://github.com/nextauthjs/next-auth) for authentication and [Prisma](https://github.com/prisma/prisma) for its ORM, connecting to a postgres database hosted on Heroku.
 
-It was bootstrapped from this example [https://github.com/prisma/blogr-nextjs-prisma].
+It was bootstrapped from this example (https://github.com/prisma/blogr-nextjs-prisma).
 
 ## Getting Started
 
