@@ -12,11 +12,10 @@ export default async function handle(req, res) {
         },
       },
     })
+
+    if (!result) return reject()
+    res.json(result)
   } catch (error) {
     return reject()
   }
-
-  if (!result) return reject()
-
-  res.json(result)
 }
