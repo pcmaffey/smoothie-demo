@@ -66,11 +66,11 @@ export function useRecipe(id) {
 // TODO - search + pagination
 export function useRecipes() {
   // fetch recipes from db if logged in
-  const { data } = useSWR(api.recipes, fetcher)
-  const error = data?.error
+  const { data, error } = useSWR(api.recipes, fetcher)
+  const err = data?.error
   return {
     data,
-    error,
+    error: err,
     loading: !error && !data,
   }
 }
